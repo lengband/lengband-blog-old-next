@@ -7,16 +7,39 @@
     "build": "next build",
     "start": "next start"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "pages/**": [
+      "eslint --ext .js --ext .jsx",
+      "git add"
+    ]
+  },
   "dependencies": {
     "@zeit/next-css": "^1.0.1",
     "antd": "^3.24.2",
     "axios": "^0.19.0",
     "babel-plugin-import": "^1.12.2",
     "highlight.js": "^9.15.10",
+    "husky": "^4.0.7",
     "lodash": "^4.17.15",
     "marked": "^0.7.0",
     "next": "9.1.1",
     "react": "16.10.2",
     "react-dom": "16.10.2"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-loader": "^3.0.3",
+    "eslint-plugin-babel": "^5.3.0",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.17.0",
+    "lint-staged": "^9.5.0"
   }
 }
