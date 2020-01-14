@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
 import axios from 'axios'
 import Link from 'next/link'
-import { Row, Col, List, Icon, Breadcrumb } from 'antd'
+import {
+  Row, Col, List, Icon, Breadcrumb,
+} from 'antd'
 import marked from 'marked'
-import hljs from "highlight.js";
+import hljs from 'highlight.js';
 import servicePath from '../config/apiUrl'
 import Header from '../components/Header'
 import Author from '../components/Author'
@@ -19,7 +21,7 @@ const ArticleList = (list) => {
   })
   const renderer = new marked.Renderer();
   marked.setOptions({
-    renderer: renderer,
+    renderer,
     gfm: true,
     pedantic: false,
     sanitize: false,
@@ -27,11 +29,10 @@ const ArticleList = (list) => {
     breaks: false,
     smartLists: true,
     smartypants: false,
-    sanitize: false,
     xhtml: false,
-    highlight: function (code) {
+    highlight(code) {
       return hljs.highlightAuto(code).value;
-    }
+    },
   });
   return (
     <>
@@ -58,11 +59,23 @@ const ArticleList = (list) => {
                   </Link>
                 </div>
                 <div className="list-icon">
-                  <span><Icon type="calendar" />{item.addTime}</span>
-                  <span><Icon type="folder" /> {item.typeName}</span>
-                  <span><Icon type="fire" />  {item.view_count}人</span>
+                  <span>
+                    <Icon type="calendar" />
+                    {item.addTime}
+                  </span>
+                  <span>
+                    <Icon type="folder" />
+                    {' '}
+                    {item.typeName}
+                  </span>
+                  <span>
+                    <Icon type="fire" />
+                    {' '}
+                    {item.view_count}
+人
+                  </span>
                 </div>
-                <div className="list-context" dangerouslySetInnerHTML={{ __html: marked(item.introduce || '-') }}></div>
+                <div className="list-context" dangerouslySetInnerHTML={{ __html: marked(item.introduce || '-') }} />
               </List.Item>
             )}
           />
@@ -78,13 +91,13 @@ const ArticleList = (list) => {
 }
 
 ArticleList.getInitialProps = async (context) => {
-  let id = context.query.id
+  const { id } = context.query
   const promise = new Promise((resolve) => {
     axios(servicePath.getListById + id).then(
-      (res) => resolve(res.data)
+      (res) => resolve(res.data),
     )
   })
-  return await promise
+  return promise
 }
 
 export default ArticleList

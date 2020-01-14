@@ -7,6 +7,7 @@ import hljs from 'highlight.js';
 import {
   Row, Col, List, Icon,
 } from 'antd'
+import moment from 'moment'
 import servicePath from '../config/apiUrl'
 import Header from '../components/Header'
 import Author from '../components/Author'
@@ -57,7 +58,7 @@ const Home = (list) => {
                     <span>
                       <Icon type="calendar" />
                       {' '}
-                      {item.addTime}
+                      {moment(+item.addTime).format('YYYY-MM-DD HH:mm:ss')}
                     </span>
                     <span>
                       <Icon type="folder" />
