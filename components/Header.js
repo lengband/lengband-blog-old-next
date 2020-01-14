@@ -9,6 +9,12 @@ import servicePath from '../config/apiUrl'
 
 const { SubMenu } = Menu
 
+const toggleView = () => {
+  if (process.env.NODE_ENV === 'development') { // 开发环境
+  } else { // 生产环境
+  }
+}
+
 const Header = () => {
   const [navArray, setNavArray] = useState([])
   useEffect(() => {
@@ -25,7 +31,9 @@ const Header = () => {
   }, [])
   // 跳转到列表页
   const handleClick = (e) => {
-    if (e.key === 0) {
+    if (e.key === 'admin') {
+      toggleView('admin')
+    } else if (e.key === 0) {
       Router.push('/index')
     } else {
       Router.push(`/list?id=${e.key}`)
@@ -63,7 +71,7 @@ const Header = () => {
                 </span>
               )}
             >
-              <Menu.Item key="login">管理后台</Menu.Item>
+              <Menu.Item key="admin">管理后台</Menu.Item>
             </SubMenu>
           </Menu>
         </Col>
