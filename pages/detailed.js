@@ -1,6 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 import Head from 'next/head'
+import moment from 'moment'
 import {
   Row, Col, Affix, Icon, Breadcrumb,
 } from 'antd'
@@ -56,23 +57,20 @@ const Detailed = (props) => {
             </div>
             <div>
               <div className="detailed-title">
-                React服务端渲染框架
+                { props.title }
               </div>
               <div className="list-icon center">
                 <span>
                   <Icon type="calendar" />
-                  {' '}
-2019-06-28
+                  {` ${moment(props.create_time).format('YYYY-MM-DD')}`}
                 </span>
                 <span>
                   <Icon type="folder" />
-                  {' '}
-视频教程
+                  {` ${props.typeName}`}
                 </span>
                 <span>
                   <Icon type="fire" />
-                  {' '}
-5498人
+                  {` ${props.view_count}人`}
                 </span>
               </div>
               <div className="detailed-content" dangerouslySetInnerHTML={{ __html: html }} />
@@ -100,7 +98,7 @@ const Detailed = (props) => {
 Detailed.getInitialProps = async (context) => {
   const { id } = context.query
   const promise = new Promise((resolve) => {
-    axios(servicePath.getArticleById + id).then(
+    axios(`${servicePath.getArticleById}/${id}`).then(
       (res) => {
         resolve(res.data.data[0])
       },

@@ -61,7 +61,7 @@ const ArticleList = (list) => {
                 <div className="list-icon">
                   <span>
                     <Icon type="calendar" />
-                    {item.addTime}
+                    {item.create_time}
                   </span>
                   <span>
                     <Icon type="folder" />

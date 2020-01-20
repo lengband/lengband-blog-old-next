@@ -33,7 +33,7 @@ const Header = () => {
   const handleClick = (e) => {
     if (e.key === 'admin') {
       toggleView('admin')
-    } else if (e.key === 0) {
+    } else if (e === 'index' || e.key === 'index') {
       Router.push('/index')
     } else {
       Router.push(`/list?id=${e.key}`)
@@ -43,7 +43,7 @@ const Header = () => {
     <div className="header">
       <Row type="flex" justify="center">
         <Col xs={24} sm={24} md={10} lg={15} xl={10}>
-          <span className="header-logo">冷板凳博客</span>
+          <span className="header-logo" onClick={() => handleClick('index')}>冷板凳博客</span>
           <span className="header-txt">总结前端开发常用的知识点</span>
         </Col>
         <Col className="memu-div" xs={0} sm={0} md={14} lg={10} xl={9}>
@@ -51,7 +51,7 @@ const Header = () => {
             mode="horizontal"
             onClick={handleClick}
           >
-            <Menu.Item key="0">
+            <Menu.Item key="index">
               <Icon type="home" />
               博客首页
             </Menu.Item>

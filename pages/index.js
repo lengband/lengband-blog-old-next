@@ -37,7 +37,7 @@ const Home = (list) => {
   return (
     <>
       <Head>
-        <title>Home</title>
+        <title>冷板凳博客</title>
       </Head>
       <Header />
       <Row className="comm-main" type="flex" justify="center">
@@ -58,7 +58,7 @@ const Home = (list) => {
                     <span>
                       <Icon type="calendar" />
                       {' '}
-                      {moment(+item.addTime).format('YYYY-MM-DD HH:mm:ss')}
+                      {moment(+item.create_time).format('YYYY-MM-DD HH:mm:ss')}
                     </span>
                     <span>
                       <Icon type="folder" />
@@ -69,6 +69,7 @@ const Home = (list) => {
                       <Icon type="fire" />
                       {' '}
                       {item.view_count}
+                      {' '}
 人
                     </span>
                   </div>
