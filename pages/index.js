@@ -58,7 +58,7 @@ const Home = (resData) => {
                     <span>
                       <Icon type="calendar" />
                       {' '}
-                      {moment(+item.create_time).format('YYYY-MM-DD HH:mm:ss')}
+                      {moment(item.create_time).format('YYYY-MM-DD')}
                     </span>
                     <span>
                       <Icon type="folder" />
