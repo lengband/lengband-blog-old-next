@@ -16,9 +16,9 @@ import Footer from '../components/Footer'
 import '../static/style/pages/index.css'
 import 'highlight.js/styles/monokai-sublime.css';
 
-const Home = (list) => {
+const Home = (resData) => {
   // eslint-disable-next-line no-unused-vars
-  const [mylist, setMylist] = useState(list.data);
+  const [mylist, setMylist] = useState(resData.list);
   const renderer = new marked.Renderer();
   marked.setOptions({
     renderer,
@@ -93,6 +93,7 @@ Home.getInitialProps = async () => {
   const promise = new Promise((resolve) => {
     axios(servicePath.getArticleList).then(
       (res) => {
+        console.log(res.data, 'dd');
         resolve(res.data)
       },
     )
