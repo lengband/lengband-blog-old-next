@@ -1,15 +1,15 @@
-import React from 'react'
-import axios from 'axios'
+import React, { useEffect } from 'react'
 import Head from 'next/head'
 import moment from 'moment'
 import {
   Row, Col, Affix, Icon, Breadcrumb,
 } from 'antd'
+import _ from 'lodash'
 import marked from 'marked'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/monokai-sublime.css'
-import servicePath from '../config/apiUrl'
-
+import { api } from '../config/api'
+import { useRequest } from '../utils/request'
 
 import Tocify from '../components/tocify.tsx'
 import Header from '../components/Header'
@@ -18,7 +18,7 @@ import Advert from '../components/Advert'
 import Footer from '../components/Footer'
 import '../static/style/pages/detailed.css'
 
-const Detailed = (props) => {
+export default function Detailed(props) {
   const tocify = new Tocify()
   const renderer = new marked.Renderer()
   renderer.heading = (text, level) => {
@@ -37,7 +37,20 @@ const Detailed = (props) => {
       return hljs.highlightAuto(code).value
     },
   })
-  const html = marked(props.article_content)
+
+  const { response: postDetail, request: fetchPostDetail } = useRequest({
+    url: api.getPostById(_.get(props, 'url.query.id')).url,
+  });
+
+  useEffect(() => {
+    fetchPostDetail()
+  }, [])
+
+  const postDetailData = postDetail ? postDetail.data : {}
+
+  const html = marked(postDetailData.content || '')
+
+  console.log(postDetail, 'postDetail');
 
   return (
     <>
@@ -57,20 +70,20 @@ const Detailed = (props) => {
             </div>
             <div>
               <div className="detailed-title">
-                { props.title }
+                { postDetailData.name }
               </div>
               <div className="list-icon center">
                 <span>
                   <Icon type="calendar" />
-                  {` ${moment(props.create_time).format('YYYY-MM-DD')}`}
+                  {` ${moment(postDetailData.createAt).format()}`}
                 </span>
                 <span>
                   <Icon type="folder" />
-                  {` ${props.typeName}`}
+                  {` ${postDetailData.type}`}
                 </span>
                 <span>
                   <Icon type="fire" />
-                  {` ${props.view_count}人`}
+                  {` ${postDetailData.view_count}人`}
                 </span>
               </div>
               <div className="detailed-content" dangerouslySetInnerHTML={{ __html: html }} />
@@ -94,17 +107,3 @@ const Detailed = (props) => {
     </>
   )
 }
-
-Detailed.getInitialProps = async (context) => {
-  const { id } = context.query
-  const promise = new Promise((resolve) => {
-    axios(`${servicePath.getArticleById}/${id}`).then(
-      (res) => {
-        resolve(res.data.data[0])
-      },
-    )
-  })
-  return promise
-}
-
-export default Detailed

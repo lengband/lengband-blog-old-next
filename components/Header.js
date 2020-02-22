@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import Router from 'next/router'
 import '../static/style/components/header.css'
 import {
   Row, Col, Menu, Icon,
 } from 'antd'
-import axios from 'axios'
-import servicePath from '../config/apiUrl'
+import _ from 'lodash'
+import { api } from '../config/api'
+import { useRequest } from '../utils/request'
 
 const { SubMenu } = Menu
 
@@ -16,18 +17,12 @@ const toggleView = () => {
 }
 
 const Header = () => {
-  const [navArray, setNavArray] = useState([])
+  const { response: typeList, request: fetchType } = useRequest({
+    url: api.getTypeList().url,
+  });
+
   useEffect(() => {
-    const fetchData = async () => {
-      const result = await axios(servicePath.getTypeInfo).then(
-        (res) => {
-          setNavArray(res.data.data)
-          return res.data.data
-        },
-      )
-      setNavArray(result)
-    }
-    fetchData()
+    fetchType()
   }, [])
   // 跳转到列表页
   const handleClick = (e) => {
@@ -44,7 +39,7 @@ const Header = () => {
       <Row type="flex" justify="center">
         <Col xs={24} sm={24} md={10} lg={15} xl={10}>
           <span className="header-logo" onClick={() => handleClick('index')}>冷板凳博客</span>
-          <span className="header-txt">总结前端开发常用的知识点</span>
+          <span className="header-txt">一名前端拷贝机</span>
         </Col>
         <Col className="memu-div" xs={0} sm={0} md={14} lg={10} xl={9}>
           <Menu
@@ -56,10 +51,10 @@ const Header = () => {
               博客首页
             </Menu.Item>
             {
-              navArray.map((item) => (
-                <Menu.Item key={item.id}>
+              (_.get(typeList, 'data.data') || []).map((item) => (
+                <Menu.Item key={item._id}>
                   <Icon type={item.icon} />
-                  {item.typeName}
+                  {item.name}
                 </Menu.Item>
               ))
             }

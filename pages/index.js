@@ -1,5 +1,7 @@
-import React, { useState } from 'react'
+/* eslint-disable */
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import _ from 'lodash'
 import Head from 'next/head'
 import Link from 'next/link'
 import marked from 'marked'
@@ -8,17 +10,18 @@ import {
   Row, Col, List, Icon,
 } from 'antd'
 import moment from 'moment'
-import servicePath from '../config/apiUrl'
+import { api } from '../config/api'
 import Header from '../components/Header'
 import Author from '../components/Author'
 import Advert from '../components/Advert'
 import Footer from '../components/Footer'
 import '../static/style/pages/index.css'
 import 'highlight.js/styles/monokai-sublime.css';
+import { useRequest } from '../utils/request'
+
+moment.defaultFormat = 'YYYY-MM-DD HH:mm:ss';
 
 const Home = (resData) => {
-  // eslint-disable-next-line no-unused-vars
-  const [mylist, setMylist] = useState(resData.list);
   const renderer = new marked.Renderer();
   marked.setOptions({
     renderer,
@@ -34,6 +37,15 @@ const Home = (resData) => {
       return hljs.highlightAuto(code).value;
     },
   });
+
+  const { response: postList, request: fetchPost } = useRequest({
+    url: api.getPostList().url,
+  });
+
+  useEffect(() => {
+    fetchPost()
+  }, [])
+
   return (
     <>
       <Head>
@@ -46,24 +58,24 @@ const Home = (resData) => {
             <List
               header={<div>最新日志</div>}
               itemLayout="vertical"
-              dataSource={mylist}
+              dataSource={_.get(postList, 'data.data') || []}
               renderItem={item => (
                 <List.Item>
                   <div className="list-title">
-                    <Link href={{ pathname: '/detailed', query: { id: item.id } }}>
-                      <a>{item.title}</a>
+                    <Link href={{ pathname: '/detailed', query: { id: item._id } }}>
+                      <a>{item.name}</a>
                     </Link>
                   </div>
                   <div className="list-icon">
                     <span>
                       <Icon type="calendar" />
                       {' '}
-                      {moment(item.create_time).format('YYYY-MM-DD')}
+                      {moment(item.createdAt).format('YYYY-MM-DD')}
                     </span>
                     <span>
                       <Icon type="folder" />
                       {' '}
-                      {item.typeName}
+                      {item.type.name}
                     </span>
                     <span>
                       <Icon type="fire" />
@@ -87,18 +99,6 @@ const Home = (resData) => {
       <Footer />
     </>
   )
-}
-
-Home.getInitialProps = async () => {
-  const promise = new Promise((resolve) => {
-    axios(servicePath.getArticleList).then(
-      (res) => {
-        console.log(res.data, 'dd');
-        resolve(res.data)
-      },
-    )
-  })
-  return promise
 }
 
 export default Home
